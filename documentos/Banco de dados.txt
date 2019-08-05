@@ -1,0 +1,56 @@
+CREATE TABLE restaurante.TBUSUARIO(
+	usucodigo serial NOT NULL,
+	usuusername varchar (20),
+	ususenha varchar(32),
+	usunivel integer not null,
+	constraint pk_tbusuario PRIMARY KEY (usucodigo)
+);
+
+
+
+CREATE TABLE restaurante.TBMESA(
+	mescodigo serial not null,
+	mesnumero char(4) not null,
+	mesobservacao varchar(30) not null,
+	meslugares integer not null,
+	mesoucupacao smallint NOT NULL DEFAULT 0, -- Situação (1-Ocupada; 0-Livre).
+	constraint pk_tbmesa PRIMARY KEY (mescodigo)
+);
+
+CREATE TABLE restaurante.TBCLIENTE(
+	clicodigo serial not null,
+	clinome varchar(30) not null,
+	clitelefone varchar(25),
+	cliendereco varchar(50),
+	clicpf varchar (11),
+	constraint pk_tbcliente PRIMARY KEY (clicodigo)
+);
+
+CREATE TABLE restaurante.TBPEDIDO(
+	pedcodigo serial not null,
+	clicodigo integer,
+	mescodigo integer,
+	pedvalortotal decimal (10,2),
+	pedobservacao varchar (30),
+	prcsituacao smallint NOT NULL DEFAULT 0, -- Situação (1-Entregue; 0-Pendente).
+	constraint pk_tbpedido PRIMARY KEY (pedcodigo),
+	constraint "FK TBMESA -> TBPEDIDO" FOREIGN KEY (mescodigo)
+	REFERENCES restaurante.tbmesa (mescodigo) MATCH SIMPLE,
+	constraint "FK TBCLIENTE -> TBPEDIDO" FOREIGN KEY (clicodigo)
+	REFERENCES restaurante.tbcliente (clicodigo) MATCH SIMPLE
+);
+
+CREATE TABLE restaurante.TBITEM(
+	itecodigo serial not null,
+	itedescricao varchar(20) not null,
+	itmvalorunitario decimal(10,2) not null,
+	itmobservacao varchar(30)
+);
+
+CREATE TABLE restaurante.TBITEMPRODUTO(
+	pedcodigo integer not null,
+	itecodigo integer not null,
+	itmproquantidade integer not null,
+	constraint pk_tbitemproduto primary key (pedcodigo,itecodigo)
+)
+
